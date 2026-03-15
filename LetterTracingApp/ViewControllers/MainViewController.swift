@@ -597,7 +597,7 @@ class MainViewController: UIViewController {
         // Configure word item views
         for (index, wordItemView) in wordItemViews.enumerated() {
             if index < currentWords.count {
-                wordItemView.configure(with: currentWords[index])
+                wordItemView.configure(with: currentWords[index], tracingLetter: letterSet.letter)
                 wordItemView.isHidden = false
             } else {
                 wordItemView.isHidden = true

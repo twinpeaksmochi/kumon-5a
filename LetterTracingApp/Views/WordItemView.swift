@@ -70,10 +70,10 @@ class WordItemView: UIView {
         ])
     }
 
-    func configure(with wordItem: WordItem) {
+    func configure(with wordItem: WordItem, tracingLetter: String) {
         emojiLabel.text = wordItem.emoji
         wordLabel.text = wordItem.word
-        tracingView.setLetter(wordItem.firstLetter)
+        tracingView.setLetter(tracingLetter)
     }
 
     func resetTracing() {
