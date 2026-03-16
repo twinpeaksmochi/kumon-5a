@@ -6,10 +6,12 @@ class LetterTracingView: UIView {
     private let drawingLayer = CAShapeLayer()
     private var currentPath = UIBezierPath()
     private var hasBeenTraced = false
+    private var hasNotifiedTraced = false
+    var onTracingCompleted: (() -> Void)?
 
     private let letterLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 110, weight: .bold)
+        label.font = UIFont(name: "Andika-Bold", size: 110) ?? UIFont.systemFont(ofSize: 110, weight: .bold)
         label.textAlignment = .center
         label.textColor = UIColor.systemGray5
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -56,13 +58,27 @@ class LetterTracingView: UIView {
     func setLetter(_ letter: String) {
         self.letter = letter
         letterLabel.text = letter.lowercased()
+        letterLabel.font = UIFont(name: "Andika-Bold", size: 110) ?? UIFont.systemFont(ofSize: 110, weight: .bold)
+        letterLabel.transform = CGAffineTransform(scaleX: horizontalScale(for: letter), y: 1.0)
         clearDrawing()
+    }
+
+    private func horizontalScale(for letter: String) -> CGFloat {
+        switch letter.lowercased() {
+        case "j":
+            return 1.0
+        case "f", "r", "t":
+            return 1.0
+        default:
+            return 1.0
+        }
     }
 
     func clearDrawing() {
         currentPath.removeAllPoints()
         drawingLayer.path = nil
         hasBeenTraced = false
+        hasNotifiedTraced = false
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -80,7 +96,10 @@ class LetterTracingView: UIView {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Drawing persists
+        if hasBeenTraced && !hasNotifiedTraced {
+            hasNotifiedTraced = true
+            onTracingCompleted?()
+        }
     }
 
     func hasDrawing() -> Bool {

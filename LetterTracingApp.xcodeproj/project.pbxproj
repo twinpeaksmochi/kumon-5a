@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C9465A52F67A95500FCAE6D /* Andika-Bold 2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C9465A42F67A95500FCAE6D /* Andika-Bold 2.ttf */; };
 		A1000001000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002000000000000001 /* AppDelegate.swift */; };
 		A1000003000000000000001 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004000000000000001 /* MainViewController.swift */; };
 		A1000005000000000000001 /* WordData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006000000000000001 /* WordData.swift */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5C9465A42F67A95500FCAE6D /* Andika-Bold 2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Andika-Bold 2.ttf"; sourceTree = "<group>"; };
 		A1000002000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A1000004000000000000001 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A1000006000000000000001 /* WordData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordData.swift; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 				A1000017000000000000001 /* Models */,
 				A1000018000000000000001 /* Views */,
 				A1000019000000000000001 /* ViewControllers */,
+				5C9465A42F67A95500FCAE6D /* Andika-Bold 2.ttf */,
 			);
 			path = LetterTracingApp;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C9465A52F67A95500FCAE6D /* Andika-Bold 2.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

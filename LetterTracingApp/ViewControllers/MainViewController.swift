@@ -441,7 +441,6 @@ class MainViewController: UIViewController {
     private var currentPageIndex = 0
     private var currentLetterSet: LetterSet?
     private var currentPages: [[WordItem]] = []
-    private var tracedCount = 0
     private let celebrationSoundPlayer = CelebrationSoundPlayerInline()
     private var spiderOverlay: SpiderOverlayView?
     private var isCelebrating = false
@@ -480,14 +479,6 @@ class MainViewController: UIViewController {
         return button
     }()
 
-    private let forwardButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Forward →", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
     private let nextButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Next Page", for: .normal)
@@ -517,7 +508,6 @@ class MainViewController: UIViewController {
         view.addSubview(letterTitleLabel)
         view.addSubview(gridStackView)
         view.addSubview(backButton)
-        view.addSubview(forwardButton)
         view.addSubview(nextButton)
 
         // Setup grid (2 rows x 2 columns)
@@ -537,7 +527,6 @@ class MainViewController: UIViewController {
         }
 
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        forwardButton.addTarget(self, action: #selector(forwardButtonTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
@@ -556,11 +545,6 @@ class MainViewController: UIViewController {
             backButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             backButton.heightAnchor.constraint(equalToConstant: 50),
             backButton.widthAnchor.constraint(equalToConstant: 120),
-
-            forwardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            forwardButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            forwardButton.heightAnchor.constraint(equalToConstant: 50),
-            forwardButton.widthAnchor.constraint(equalToConstant: 140),
 
             nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nextButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
@@ -581,7 +565,6 @@ class MainViewController: UIViewController {
             currentPages = WordDataManager.shared.getPages(for: letterSet)
         }
         currentPageIndex = 0
-        tracedCount = 0
     }
 
     private func updateUI() {
@@ -609,12 +592,22 @@ class MainViewController: UIViewController {
         backButton.alpha = backButton.isEnabled ? 1.0 : 0.5
 
         nextButton.isHidden = true
+
+        // Wire auto-celebration: fire when all visible boxes have been traced
+        let visibleViews = wordItemViews.filter { !$0.isHidden }
+        for wordItemView in visibleViews {
+            wordItemView.tracingView.onTracingCompleted = { [weak self] in
+                guard let self else { return }
+                if visibleViews.allSatisfy({ $0.tracingView.hasDrawing() }) {
+                    self.showCelebration()
+                }
+            }
+        }
     }
 
     @objc private func backButtonTapped() {
         if currentPageIndex > 0 {
             currentPageIndex -= 1
-            tracedCount = 0
         } else if currentLetterSetIndex > 0 {
             currentLetterSetIndex -= 1
             loadLetterSet()
@@ -624,18 +617,8 @@ class MainViewController: UIViewController {
         resetTracingViews()
     }
 
-    @objc private func forwardButtonTapped() {
-        tracedCount += 1
-
-        if tracedCount >= 4 {
-            // All 4 letters on current page traced
-            showCelebration()
-        }
-    }
-
     @objc private func nextButtonTapped() {
         nextButton.isHidden = true
-        tracedCount = 0
 
         if currentPageIndex < currentPages.count - 1 {
             currentPageIndex += 1
